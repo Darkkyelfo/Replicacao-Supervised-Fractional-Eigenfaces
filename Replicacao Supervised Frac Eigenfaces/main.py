@@ -8,8 +8,8 @@ if __name__ == '__main__':
     
     r = 0.1
     hold = 50
-    execucaoEigen("yale", "resultadoSupEigenYale.txt",15,r,50)
-    execucaoSupFracEigen("orl", "resultadoSupEigenOrl.txt",40,r,hold)
+    #execucaoEigen("yale", "resultadoSupEigenYale.txt",15,r,50)
+    #execucaoSupFracEigen("orl", "resultadoSupEigenOrl.txt",40,r,hold)
     execucaoSupFracEigen("georgia", "resultadoSupEigenGeorgia.txt",50,r,hold)
     
     execucaoEigen("yale", "resultadoEigenYale.txt", 15, hold)
