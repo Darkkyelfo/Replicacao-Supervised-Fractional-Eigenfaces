@@ -89,15 +89,15 @@ class PCAWhitening(PCA):
                 novosAtributos[i][j] = atr/math.sqrt(self.autoValues[j])
         
         return Base(base1.classes,novosAtributos)
-    
 
 class DualSupervisedPCA(PCA):
     
     def fit(self,bTreino):
         self.base = bTreino
-        copia = np.array(copy.deepcopy(bTreino.atributos))
-        cov,H = self._gerarMatrizS(copia)
-        autoValues,autoVectors = np.linalg.eig(cov)
+        copia = np.array(copy.deepcopy(bTreino.atributos)).T
+        S,H = self._gerarMatrizS(copia)
+        autoValues,autoVectors = np.linalg.eig(S)
+        # autoValues = np.array([-1*i if i < 0 else i for i in autoValues])
         autoVectors = autoVectors.T
         autoValues,autoVectors = zip(*sorted(zip(autoValues, autoVectors),reverse=True))
         self._encontrarAutovetores(copia,autoVectors,autoValues,H)
@@ -105,10 +105,10 @@ class DualSupervisedPCA(PCA):
     def _gerarMatrizS(self,copia):
         self.delta = self._gerarMatrizDelta(self.base)
         mIdentidade = np.identity(self.base.qtElementos)
-        ones = (self.base.qtElementos,1)
-        h = np.ones(ones)
-        H = mIdentidade - (1/(self.base.qtElementos))*(h.dot(h.T))
-        S = self.delta.dot(H).dot(copia.dot(copia.T)).dot(H).dot(self.delta.T)
+        h = np.ones((self.base.qtElementos,1))
+        H = mIdentidade - ((1/(self.base.qtElementos))*(h.dot(h.T)))
+        # XtX = copia.T.dot(copia)
+        S = self.delta.dot(H).dot(copia.T).dot(copia).dot(H).dot(self.delta.T)
         return S,H
 
     @jit
@@ -123,12 +123,13 @@ class DualSupervisedPCA(PCA):
     
     def _encontrarAutovetores(self,sub,autoVectores,autoValores,H):
         self.autoVectors = []
+        # print(autoVectores[0])
         for i,e in enumerate(autoVectores):
             if autoValores[i]<=0:
-                part = 0
+                part = 1/((-autoValores[i])**(1/2))
             else:
                 part = (1/((autoValores[i])**(1/2)))
-            part2 = sub.T.dot(H).dot(self.delta.T)
-            autoVetor = (part*part2).dot(e)
+            part2 = sub.dot(H).dot(self.delta.T).dot(e)
+            autoVetor = part*part2
             self.autoVectors.append(autoVetor)
         self.autoVectors = np.array(self.autoVectors)

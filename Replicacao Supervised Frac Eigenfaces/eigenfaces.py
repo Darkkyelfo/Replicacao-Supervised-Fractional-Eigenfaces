@@ -115,7 +115,7 @@ class SupervisedFractionalEigenfaces(FractionalEigenfaces):
         self.autoVectors = []
         for i,e in enumerate(autoVectores):
             if(autoValores[i]<=0):
-                part = 0
+                part = (1/((-n*autoValores[i])**(1/2)))
             else:
                 part = (1/((n*autoValores[i])**(1/2)))
             autoVetor = part*sub.T.dot(self.delta.T).dot(e)

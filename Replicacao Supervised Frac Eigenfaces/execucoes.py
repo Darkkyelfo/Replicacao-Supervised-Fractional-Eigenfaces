@@ -151,12 +151,15 @@ def executarTodos(base,arq,qtCla=15,r=0.01,hold=10):
         baseAtual = imgsParaBase("Bases/%s"%base,qtClasses=qtCla,dirClasse = "s",tipoArq = "jpg")
     else:
         baseAtual = imgsParaBase("Bases/%s"%base,qtClasses=qtCla)
-    for j in range(1,41):
+
+    basesHold = gerarBases(baseAtual,hold)
+    for j in range(15,41):
         arqSave = open(caminhoArq, "a")
         erros = [0]*4
         print(j)
-        for k in range(hold):
-            bTesteOri,bTreinoOri = Holdout.dividirImg(baseAtual)
+        for k in basesHold:
+            bTesteOri = k[0]
+            bTreinoOri = k[1]
 
             pca = DualSupervisedPCA()
             pca.fit(bTreinoOri)
@@ -198,7 +201,12 @@ def executarTodos(base,arq,qtCla=15,r=0.01,hold=10):
 
 
 
-
+def gerarBases(baseAtual,hold):
+    bases = []
+    for k in range(hold):
+        bTesteOri, bTreinoOri = Holdout.dividirImg(baseAtual)
+        bases.append((bTesteOri,bTreinoOri))
+    return bases
 
     
 
