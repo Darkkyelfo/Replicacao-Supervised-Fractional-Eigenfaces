@@ -24,6 +24,9 @@ class Base(object):
         for e in self.classes:
             if(e not in self.tiposClasses):
                 self.tiposClasses.append(e)
+        self.qtPorClasse = {}
+        for i in self.tiposClasses:
+            self.qtPorClasse[i] = self.classes.count(i)
 
     def getSubBaseClasse(self,indice):
         subClasse = []
@@ -77,7 +80,12 @@ class Base(object):
             div = div + div
         return bases
 
-        
+    def remover(self,index):
+        self.qtPorClasse[self.classes[index]] = self.qtPorClasse[self.classes[index]] - 1
+        del self.classes[index]
+        del self.atributos[index]
+        self.qtElementos = self.qtElementos-1
+
 class BaseImg(Base):   
     
     def __init__(self,classes=[],atributos=[],matrizImgs=[],nome=""):
@@ -86,9 +94,13 @@ class BaseImg(Base):
         self.qtPixels = self.matrizImgs[0].shape[0]*self.matrizImgs[0].shape[1]
         self.linhas = self.matrizImgs[0].shape[0]
         self.colunas = self.matrizImgs[0].shape[1]
-            
+
+    def copy(self):
+        return BaseImg(deepcopy(self.classes),deepcopy(self.atributos),deepcopy(self.matrizImgs),self.nome)
         
-        
+    def remover(self,index):
+        super().remover(index)
+        del self.matrizImgs[index]
 
                 
         

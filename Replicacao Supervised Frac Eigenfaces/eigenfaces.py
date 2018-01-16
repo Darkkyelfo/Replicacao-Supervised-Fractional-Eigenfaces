@@ -6,6 +6,7 @@ Created on 14 de nov de 2017
 from pca import PCA
 from copy import deepcopy
 import numpy as np
+from numba import jit
 import math
 
 class Eigenfaces(PCA):
@@ -25,7 +26,8 @@ class Eigenfaces(PCA):
         autoVectors = np.array(autoVectors).T
         autoValues,autoVectors =  zip(*sorted(zip(autoValues, autoVectors),reverse=True))
         self._encontrarAutovetores(copia.T,autoVectors,autoValues, n)
-    
+
+    @jit
     def _gerarMatrizSub(self,matriz):
         colunas = len(matriz[0])
         linhas = len(matriz)
@@ -67,7 +69,8 @@ class FractionalEigenfaces(Eigenfaces):
     def fit(self,bTreino,r=0.01):
         self.r = r
         super().fit(bTreino)
-        
+
+    @jit
     def _gerarMatrizSub(self,matriz):
         colunas = len(matriz[0])
         linhas = len(matriz)
@@ -97,11 +100,12 @@ class SupervisedFractionalEigenfaces(FractionalEigenfaces):
         self.delta = self._gerarMatrizDelta(self.base)
         S = self.delta.dot(copia.T.dot(copia)).dot(self.delta.T)
         return S
-        
+
+    @jit
     def _gerarMatrizDelta(self,base):
         qtClasses = len(base.tiposClasses)
         delta = np.zeros((qtClasses, base.qtElementos))
-        for classe in range(qtClasses):
+        for classe in base.tiposClasses:
             for coluna in range(base.qtElementos):
                 if(classe == base.classes[coluna]):
                     delta[classe][coluna] = 1
