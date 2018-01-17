@@ -98,7 +98,7 @@ class SupervisedFractionalEigenfaces(FractionalEigenfaces):
         
     def _gerarMatrizCov(self,copia, n):
         self.delta = self._gerarMatrizDelta(self.base)
-        S = self.delta.dot(copia.T.dot(copia)).dot(self.delta.T)
+        S = self.delta.dot(copia.T).dot(copia).dot(self.delta.T)
         return S
 
     @jit
