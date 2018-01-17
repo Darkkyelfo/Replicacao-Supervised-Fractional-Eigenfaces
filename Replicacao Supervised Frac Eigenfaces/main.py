@@ -3,7 +3,7 @@ Created on 30 de dez de 2017
 
 @author: raul1
 '''
-from execucoes import execucaoEigen, execucaoSupFracEigen,execucaoFracEigen,executarDSPCA,executarTodos
+from execucoes import executarTodos
 if __name__ == '__main__':
     
     r = 0.1
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     execucaoEigen("georgia", "resultadoEigenGeogia.txt",50, hold)
     '''
     #executarDSPCA("yale", "resultadoDSPCAYale.txt",15,50)
-    executarTodos("yale", "resultadoTodosYale.txt",15,r,hold)
+    executarTodos("yale",15,r,hold)
    # executarTodos("orl", "resultadoTodosOrl.txt",40,r,hold)
    # executarTodos("georgia", "resultadoTodosGeorgia.txt",50,r,hold)
     #executarDSPCA("orl", "resultadoDSPCAOrl.txt",40,50)
